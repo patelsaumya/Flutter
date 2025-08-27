@@ -1,0 +1,32 @@
+3 Trees
+
+-> Widget Tree
+    -> Combination of widgets in your code
+    -> build() is called very frequently to check for required updates
+-> Element Tree
+    -> In-memory representation of your widgets
+    -> Used for determining necessary UI updates
+    -> Initially created after build()
+    -> Elements are re-used if possible
+    -> If, element skeleton stays the same,
+       then Flutter only updates the widget references + UI output if necessary
+    -> State objects are connected to the elements
+    -> Key is an additional identification criteria allowing Flutter to match elements to widgets.
+       Flutter is able to make sure that every widget has exactly the element with exactly the state it needs.
+-> Render Tree
+    -> The visible UI building blocks
+    -> Updated when determined via element tree comparisons
+    -> Re-rendered if needed
+    -> Only (partially) re-rendered if UI updates are needed
+
+
+Variable Define Keywords (things allowed)
+
+-> var
+    -> var numbers = [1,2,3];
+       numbers = [4,5,6];
+-> final
+    -> final numbers = [1,2,3];
+       numbers.add(4);
+-> const
+    -> const numbers = [1,2,3];
