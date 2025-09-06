@@ -3,6 +3,7 @@ import 'package:project_5/models/meal.dart';
 import 'package:project_5/widgets/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+// Multi-Screen Transitions
 class MealItem extends StatelessWidget {
   const MealItem({
     super.key,
@@ -39,12 +40,15 @@ class MealItem extends StatelessWidget {
         child: Stack(
           // bottom -> top (z-index)
           children: [
-            FadeInImage(
-              placeholder: MemoryImage(kTransparentImage),
-              image: NetworkImage(meal.imageUrl),
-              fit: BoxFit.cover,
-              height: 200,
-              width: double.infinity
+            Hero(
+              tag: meal.id,
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: NetworkImage(meal.imageUrl),
+                fit: BoxFit.cover,
+                height: 200,
+                width: double.infinity
+              )
             ),
             Positioned(
               bottom: 0,
