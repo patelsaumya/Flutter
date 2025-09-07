@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:project_6/data/categories.dart';
 import 'package:project_6/models/category.dart';
 import 'package:project_6/models/grocery_item.dart';
@@ -18,13 +21,44 @@ class _NewItemState extends State<NewItem> {
   var _enteredName = '';
   var _enteredQuantity = 1;
   var _selectedCategory = categories[Categories.vegetables]!;
+  var _isSending = false;
 
-  void _saveItem() {
+  void _saveItem() async {
     if(_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      
+      setState(() {
+        _isSending = true;
+      });
+
+      final url = Uri.https(
+        dotenv.env['FIREBASE_DOMAIN']!,
+        "shopping-list.json"
+      );
+      final response = await http.post(
+        url, 
+        headers: {
+          'Content-Type': 'application/json'
+        }, 
+        body: json.encode(
+          {
+            "name": _enteredName,
+            "quantity": _enteredQuantity,
+            "category": _selectedCategory.title
+          }
+        )
+      );
+
+      final Map<String, dynamic> resData = json.decode(response.body);
+
+      if (!context.mounted) {
+        // context is not present in the widget tree
+        // widget is not part of the screen
+        return;
+      }
       Navigator.of(context).pop(
         GroceryItem(
-          id: DateTime.now().toString(),
+          id: resData['name'],
           name: _enteredName,
           quantity: _enteredQuantity,
           category: _selectedCategory
@@ -126,14 +160,22 @@ class _NewItemState extends State<NewItem> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
-                    onPressed: () {
-                      _formKey.currentState!.reset();
-                    }, 
+                    onPressed: _isSending 
+                        ? null 
+                        : () {
+                            _formKey.currentState!.reset();
+                          }, // if onPressed is null then the button is disabled
                     child: const Text('Reset')
                   ),
                   ElevatedButton(
-                    onPressed: _saveItem,
-                    child: const Text('Add Item')
+                    onPressed: _isSending ? null : _saveItem,
+                    child: _isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator()
+                          )
+                        : const Text('Add Item')
                   )
                 ]
               )
