@@ -1,0 +1,51 @@
+Third party packages:
+
+- image_picker
+
+IOS: ios/Runner/Info.plist (add this)
+
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Pick your favorite place image.</string>
+<key>NSCameraUsageDescription</key>
+<string>Take your favorite place image.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>Take your favorite place image.</string>
+
+
+- location
+
+IOS: ios/Runner/Info.plist (add this)
+
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Pick your favorite place image.</string>
+
+- google_maps_flutter
+
+Google Maps Platform: enable "Maps SDK for Android" and "Maps SDK for iOS"
+
+Android:
+    - android/app/build.gradle 
+        - android > defaultConfig > minSdkVersion = 20
+    - android/app/src/main/AndroidManifest.xml
+        - <manifest ...
+            <application ...
+                <meta-data android:name="com.google.android.geo.API_KEY"
+                        android:value="YOUR KEY HERE"/>
+
+IOS:
+    - ios/Runner/AppDelegate.swift
+        -   import UIKit
+            import Flutter
+            import GoogleMaps
+
+            @UIApplicationMain
+            @objc class AppDelegate: FlutterAppDelegate {
+            override func application(
+                _ application: UIApplication,
+                didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+            ) -> Bool {
+                GMSServices.provideAPIKey("YOUR KEY HERE")
+                GeneratedPluginRegistrant.register(with: self)
+                return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+            }
+            }
