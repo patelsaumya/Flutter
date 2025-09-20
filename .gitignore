@@ -16,6 +16,7 @@
 
 # Firebase
 firebase_options.dart
+firebase.json
 
 
 # Flutter repo-specific
